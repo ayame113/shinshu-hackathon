@@ -44,7 +44,8 @@
     <script>
       const conversationDiv = document.getElementById('conversation');
       const promptInput = document.getElementById('prompt');
-      const answerInput = document.getElementById('guess')
+      const answerInput = document.getElementById('guess');
+      let currentQuestionIndex = undefined;
 
       function appendMessage(text, className) {
         const messageDiv = document.createElement('div');
@@ -57,7 +58,8 @@
       async function pushQuestion() {
         const response = await fetch("/pushQuestion");
         const data = await response.json();
-        console.log(data.question)
+        console.log(data.question);
+        currentQuestionIndex = data.questionIndex;
         appendMessage(data.question, 'PushedQuestion');
       }
 
@@ -67,7 +69,7 @@
         promptInput.value = ''; // clear the input after sending
         const response = await fetch("/umigame", {
             "method": "POST",
-            "body": JSON.stringify({prompt}),
+            "body": JSON.stringify({prompt, questionIndex: currentQuestionIndex}),
             headers: {"Content-Type": "application/json"}
         });
         const data = await response.json();
@@ -82,7 +84,7 @@
         answerInput.value = ''; // clear the input after sending
         const response = await fetch("/answer", {
             "method": "POST",
-            "body": JSON.stringify({AnswerStr}),
+            "body": JSON.stringify({AnswerStr, questionIndex: currentQuestionIndex}),
             headers: {"Content-Type": "application/json"}
         });
         const AnswerData = await response.json();
