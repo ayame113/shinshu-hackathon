@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #conversation {
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+        overflow: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .PushedQuestion, .question, .answer {
+        margin: 5px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .PushedQuestion{
+        align-items: center;
+        background-color: aqua;
+      }
+      .question {
+        align-self: flex-start;
+        background-color: #f0f0f0;
+      }
+      .answer {
+        align-self: flex-end;
+        background-color: #d0f0d0;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="showQuestionButton" onClick="pushQuestion()">問題を出力する</button>
+    <div id="questionContainer"></div>
+
+    <div id="conversation"></div>
+    <input type="text" id="prompt" placeholder="Ask something..." onkeydown="if(event.key==='Enter') ask()">
+    <button onClick="ask()">Ask</button><br>
+    <input type="text" id="guess" placeholder="please input answer" onkeydown="if(event.key==='Enter') answer()">
+    <button onClick="answer()">Answer</button>
+
+    <script>
+      const conversationDiv = document.getElementById('conversation');
+      const promptInput = document.getElementById('prompt');
+      const answerInput = document.getElementById('guess')
+
+      function appendMessage(text, className) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add(className);
+        messageDiv.textContent = text;
+        conversationDiv.appendChild(messageDiv);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+      }
+
+      async function pushQuestion() {
+        const response = await fetch("/pushQuestion");
+        const data = await response.json();
+        console.log(data.question)
+        appendMessage(data.question, 'PushedQuestion');
+      }
+
+      async function ask() {
+        const prompt = promptInput.value;
+        appendMessage(prompt, 'question');
+        promptInput.value = ''; // clear the input after sending
+        const response = await fetch("/umigame", {
+            "method": "POST",
+            "body": JSON.stringify({prompt}),
+            headers: {"Content-Type": "application/json"}
+        });
+        const data = await response.json();
+        console.log(data)
+        appendMessage(data.answer, 'answer');
+      }
+
+      async function answer() {
+        console.log("hey");
+        const AnswerStr = answerInput.value;
+        appendMessage(AnswerStr, 'question');
+        answerInput.value = ''; // clear the input after sending
+        const response = await fetch("/answer", {
+            "method": "POST",
+            "body": JSON.stringify({AnswerStr}),
+            headers: {"Content-Type": "application/json"}
+        });
+        const AnswerData = await response.json();
+        appendMessage(AnswerData.answer, 'answer');
+      }
+    </script>
+  </body>
+</html>
