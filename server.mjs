@@ -69,13 +69,15 @@ app.post("/answer", async (req, res) => {
       content: `「${userAnswer}」は「${realAnswer}」の類似度を100点満点で数字だけで答えて下さい`
     }],
   });
-  res.json({ answer: response.data.choices[0].message.content });
+  const chatGptAnswer = response.data.choices[0].message.content;
+  res.json({ answer: getPointFromSentence(chatGptAnswer) });
 });
 
 app.listen(3000, () => {
   console.log("listening http://localhost:3000/")
 });
 
+/** ChatGPTの返答から点数部分を抜き出す */
 function getPointFromSentence(text) {
   const result = text.match(/\d+\.?\d点/g);
   if (result && result.length) {
