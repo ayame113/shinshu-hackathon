@@ -10,6 +10,9 @@ const outputDialog = document.getElementById("output-dialog");
 const dialogContentBox = document.getElementById("output-dialog-content");
 const dialogCloseButton = document.getElementById("output-dialog-close");
 
+const RETRY_MESSAGE =
+  "通信エラーが発生しました。少し待ってから再度お試しください。";
+
 // 現在どの質問を処理しているか保存する変数
 let currentQuestionIndex;
 
@@ -30,6 +33,10 @@ outputDialog.addEventListener("click", (e) => {
 // 最初に問題を生成する
 async function pushQuestion() {
   const response = await fetch("/pushQuestion");
+  if (!response.ok) {
+    questionBox.innerText = "質問の取得に失敗しました。";
+    return;
+  }
   const data = await response.json();
   console.log(data.question);
   currentQuestionIndex = data.questionIndex;
@@ -46,6 +53,7 @@ async function ask() {
   if (!isAnsweringAllowed) return;
   startCountdown();
   appendMessage(prompt, "history-question");
+  // レスポンス待機中の「...」コメントを生成
   const waiting = appendMessage("......", "history-waiting");
   form.value = "";
   const response = await fetch("/umigame", {
@@ -53,6 +61,12 @@ async function ask() {
     body: JSON.stringify({ prompt, questionIndex: currentQuestionIndex }),
     headers: { "Content-Type": "application/json" },
   });
+  if (!response.ok) {
+    console.error(await response.text());
+    waiting.remove();
+    appendMessage(RETRY_MESSAGE, "history-response");
+    return;
+  }
   const data = await response.json();
   console.log(data);
   waiting.remove();
@@ -79,6 +93,12 @@ async function answer() {
     }),
     headers: { "Content-Type": "application/json" },
   });
+  if (!response.ok) {
+    console.error(await response.text());
+    waiting.remove();
+    appendMessage(RETRY_MESSAGE, "history-response");
+    return;
+  }
   const answerData = await response.json();
   waiting.remove();
   appendMessage(answerData.answer, "history-response");
