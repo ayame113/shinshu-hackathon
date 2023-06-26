@@ -1,112 +1,46 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <style>
-      #conversation {
-        display: flex;
-        flex-direction: column;
-        height: 80vh;
-        overflow: auto;
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-      }
-      .PushedQuestion,
-      .question,
-      .answer {
-        margin: 5px;
-        padding: 10px;
-        border-radius: 5px;
-      }
-
-      .PushedQuestion {
-        align-items: center;
-        background-color: aqua;
-      }
-      .question {
-        align-self: flex-start;
-        background-color: #f0f0f0;
-      }
-      .answer {
-        align-self: flex-end;
-        background-color: #d0f0d0;
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+1p&display=swap"
+      rel="stylesheet"
+    />
+    <script src="script.js" type="module"></script>
   </head>
   <body>
-    <button id="showQuestionButton" onClick="pushQuestion()">
-      問題を出力する
-    </button>
-    <div id="questionContainer"></div>
-
-    <div id="conversation"></div>
-    <input
-      type="text"
-      id="prompt"
-      placeholder="Ask something..."
-      onkeydown="if(event.key==='Enter') ask()"
-    />
-    <button onClick="ask()">Ask</button><br />
-    <input
-      type="text"
-      id="guess"
-      placeholder="please input answer"
-      onkeydown="if(event.key==='Enter') answer()"
-    />
-    <button onClick="answer()">Answer</button>
-
-    <script>
-      const conversationDiv = document.getElementById("conversation");
-      const promptInput = document.getElementById("prompt");
-      const answerInput = document.getElementById("guess");
-      let currentQuestionIndex = undefined;
-
-      function appendMessage(text, className) {
-        const messageDiv = document.createElement("div");
-        messageDiv.classList.add(className);
-        messageDiv.textContent = text;
-        conversationDiv.appendChild(messageDiv);
-        conversationDiv.scrollTop = conversationDiv.scrollHeight;
-      }
-
-      async function pushQuestion() {
-        const response = await fetch("/pushQuestion");
-        const data = await response.json();
-        console.log(data.question);
-        currentQuestionIndex = data.questionIndex;
-        appendMessage(data.question, "PushedQuestion");
-      }
-
-      async function ask() {
-        const prompt = promptInput.value;
-        appendMessage(prompt, "question");
-        promptInput.value = ""; // clear the input after sending
-        const response = await fetch("/umigame", {
-          method: "POST",
-          body: JSON.stringify({ prompt, questionIndex: currentQuestionIndex }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const data = await response.json();
-        console.log(data);
-        appendMessage(data.answer, "answer");
-      }
-
-      async function answer() {
-        console.log("hey");
-        const AnswerStr = answerInput.value;
-        appendMessage(AnswerStr, "question");
-        answerInput.value = ""; // clear the input after sending
-        const response = await fetch("/answer", {
-          method: "POST",
-          body: JSON.stringify({
-            AnswerStr,
-            questionIndex: currentQuestionIndex,
-          }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const AnswerData = await response.json();
-        appendMessage(AnswerData.answer, "answer");
-      }
-    </script>
+    <div id="answer-form">
+      <div class="request-new-question-wrapper">
+        <button id="request-new-question" class="button">
+          新しい問題を出題
+        </button>
+      </div>
+      <div id="current-question"></div>
+    </div>
+    <div id="history-wrapper">
+      <div id="history"></div>
+      <div id="image"><img src="./free_.png" alt="entity image" /></div>
+    </div>
+    <div id="question-form">
+      <!--回答フォーム -->
+      <textarea
+        id="form-textarea"
+        class="form-textarea"
+        placeholder="質問か回答を入力してください"
+      ></textarea>
+      <button id="question-button" class="button">質問する</button>
+      <button id="answer-form-button" class="button">回答する</button>
+      <span class="countdown" id="countdown"></span>
+    </div>
+    <dialog id="output-dialog">
+      <div id="output-dialog-content"></div>
+      <img src="./free_.png" alt="" />
+      <button id="output-dialog-close">閉じる</button>
+    </dialog>
   </body>
 </html>
