@@ -1,0 +1,232 @@
+/* reset css */
+:root,
+html,
+body,
+div {
+  padding: 0;
+  margin: 0;
+  font-family: "M PLUS 1p", sans-serif;
+}
+:root,
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 出題フォーム関連 */
+.request-new-question-wrapper {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#answer-form {
+  width: 100%;
+  background-color: aliceblue;
+}
+
+/* 質問履歴関連 */
+#history-wrapper {
+  display: flex;
+  height: 10%;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#history-wrapper > *:first-child {
+  flex-grow: 1;
+  background-color: rgb(254, 240, 255);
+}
+#history-wrapper > *:last-child {
+  width: 300px;
+  background-color: rgb(245, 255, 240);
+}
+@media screen and (max-width: 500px) {
+  #history-wrapper {
+    flex-direction: column;
+  }
+  #history-wrapper > *:first-child {
+    width: auto;
+    height: 60%;
+    order: 2;
+  }
+  #history-wrapper > *:last-child {
+    width: 100%;
+    height: 40%;
+    order: 1;
+  }
+}
+
+/* 質問履歴の詳細欄 */
+#history {
+  overflow-y: scroll;
+  padding: 1rem;
+}
+.history-question,
+.history-response,
+.history-waiting {
+  margin-top: 1em;
+  padding: 0.5em;
+  width: fit-content;
+}
+.history-question {
+  background-color: rgb(160, 255, 160);
+  border-radius: 1em 1em 1em 0;
+}
+.history-response {
+  background-color: lightgray;
+  border-radius: 1em 1em 0 1em;
+  margin-right: 0;
+  margin-left: auto;
+}
+.history-waiting {
+  background-color: lightgray;
+  border-radius: 1em 1em 0 1em;
+  margin-right: 0;
+  margin-left: auto;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    color: gray;
+    opacity: 1;
+  }
+  50% {
+    color: black;
+    opacity: 0.5;
+  }
+}
+
+/* 質問/回答入力欄 */
+#question-form {
+  background-color: bisque;
+  /* height: 30%; */
+}
+
+.answer {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.history {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.question-form {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.countdown {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: left;
+}
+
+#image {
+  overflow: hidden;
+}
+
+#image > img {
+  display: block;
+  margin-top: -30%;
+  margin-left: -25%;
+  margin-right: auto;
+  width: 150%;
+  height: 120%;
+}
+
+@media screen and (max-width: 500px) {
+  #image > img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50vh;
+    margin-top: -5vh;
+  }
+}
+
+/* #image {
+  display: flex;
+  flex-direction: column;
+  width: 150%;
+  height: 100%;
+  
+} */
+
+/*#image > img {
+  width: 150%;
+  height: 100%;
+  position: relative;
+  top: -130px;
+  left: -110px;
+}*/
+
+/* ボタンスタイル */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* テキストエリアスタイル */
+.form-textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  resize: none;
+}
+
+#question-button {
+  background-color: #4285f4;
+  color: #ffffff;
+}
+
+#answer-form-button {
+  background-color: #fbbc05;
+  color: #ffffff;
+}
+
+#request-new-question {
+  background-color: green;
+}
+
+dialog {
+  width: 80%;
+}
+dialog button {
+  margin-right: auto;
+  margin-left: auto;
+}
+/* dialogの背景 */
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
