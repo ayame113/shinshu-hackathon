@@ -10,6 +10,9 @@ const outputDialog = document.getElementById("output-dialog");
 const dialogContentBox = document.getElementById("output-dialog-content");
 const dialogCloseButton = document.getElementById("output-dialog-close");
 
+const RETRY_MESSAGE =
+  "通信エラーが発生しました。少し待ってから再度お試しください。";
+
 // 現在どの質問を処理しているか保存する変数
 let currentQuestionIndex;
 
@@ -30,6 +33,10 @@ outputDialog.addEventListener("click", (e) => {
 // 最初に問題を生成する
 async function pushQuestion() {
   const response = await fetch("/pushQuestion");
+  if (!response.ok) {
+    questionBox.innerText = "質問の取得に失敗しました。";
+    return;
+  }
   const data = await response.json();
   console.log(data.question);
   currentQuestionIndex = data.questionIndex;
@@ -39,6 +46,7 @@ async function pushQuestion() {
 // 質問する
 async function ask() {
   const prompt = form.value;
+  // 何も入力されていない場合は何もしない
   if (!prompt) {
     return;
   }
@@ -46,6 +54,7 @@ async function ask() {
   if (!isAnsweringAllowed) return;
   startCountdown();
   appendMessage(prompt, "history-question");
+  // レスポンス待機中の「...」コメントを生成
   const waiting = appendMessage("......", "history-waiting");
   form.value = "";
   const response = await fetch("/umigame", {
@@ -53,6 +62,12 @@ async function ask() {
     body: JSON.stringify({ prompt, questionIndex: currentQuestionIndex }),
     headers: { "Content-Type": "application/json" },
   });
+  if (!response.ok) {
+    console.error(await response.text());
+    waiting.remove();
+    appendMessage(RETRY_MESSAGE, "history-response");
+    return;
+  }
   const data = await response.json();
   console.log(data);
   waiting.remove();
@@ -62,6 +77,7 @@ async function ask() {
 // 回答を送信して正しいかを判定する
 async function answer() {
   const answerStr = form.value;
+  // 何も入力されていない場合は何もしない
   if (!answerStr) {
     return;
   }
@@ -69,6 +85,7 @@ async function answer() {
   if (!isAnsweringAllowed) return;
   startCountdown();
   appendMessage(answerStr, "history-question");
+  // レスポンス待機中の「...」コメントを生成
   const waiting = appendMessage("......", "history-waiting");
   form.value = "";
   const response = await fetch("/answer", {
@@ -79,6 +96,12 @@ async function answer() {
     }),
     headers: { "Content-Type": "application/json" },
   });
+  if (!response.ok) {
+    console.error(await response.text());
+    waiting.remove();
+    appendMessage(RETRY_MESSAGE, "history-response");
+    return;
+  }
   const answerData = await response.json();
   waiting.remove();
   appendMessage(answerData.answer, "history-response");
@@ -149,21 +172,3 @@ function enableButtons() {
   questionButton.classList.remove("disabled");
   answerButton.classList.remove("disabled");
 }
-
-// textareaのサイズをウィンドウサイズに合わせて調整
-/*
-function adjustTextareaSize() {
-  const windowHeight = window.innerHeight;
-  const textareaWrapperHeight = windowHeight * 0.3; // テキストエリアの高さをウィンドウの30%に設定
-  document.getElementById("question-form").style.height =
-    textareaWrapperHeight + "px";
-  document.getElementById("form-textarea").style.height =
-    textareaWrapperHeight - 40 + "px";
-}
-
-// ウィンドウのリサイズ時にtextareaのサイズを調整
-window.addEventListener("resize", adjustTextareaSize);
-
-// 初期表示時にtextareaのサイズを調整
-adjustTextareaSize();
-*/
