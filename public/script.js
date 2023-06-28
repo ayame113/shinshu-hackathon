@@ -4,17 +4,27 @@ const conversationDiv = document.getElementById("history");
 const questionBox = document.getElementById("current-question");
 const answerButton = document.getElementById("answer-form-button");
 const questionButton = document.getElementById("question-button");
+const giveupButton = document.getElementById("giveup-button");
 const requestQuestionButton = document.getElementById("request-new-question");
 const form = document.getElementById("form-textarea");
 const outputDialog = document.getElementById("output-dialog");
 const dialogContentBox = document.getElementById("output-dialog-content");
 const dialogCloseButton = document.getElementById("output-dialog-close");
+const giveupDialog = document.getElementById("giveup-dialog");
+const dialogGiveup = document.getElementById("yes-giveup-button");
+const dialogNoGiveup = document.getElementById("no-giveup-button");
+const answerDialog = document.getElementById("answer-dialog");
+const dialogAnswer = document.getElementById("answer-output");
+const dialogAnswerCloseButton = document.getElementById("answer-dialog-close");
 
 const RETRY_MESSAGE =
   "通信エラーが発生しました。少し待ってから再度お試しください。";
 
 // 現在どの質問を処理しているか保存する変数
 let currentQuestionIndex;
+
+// 現在の問題の答えを保存する変数
+let currentQuestionAnswer;
 
 // 最初に問題を生成する
 pushQuestion();
@@ -23,12 +33,36 @@ pushQuestion();
 dialogCloseButton.addEventListener("click", () => {
   outputDialog.close();
 });
+
 // ダイアログの外側を押したら
 outputDialog.addEventListener("click", (e) => {
   if (e.target !== dialogCloseButton) {
     outputDialog.close();
   }
 });
+
+// 降参ボタンを押した際の処理
+giveupButton.addEventListener("click", () => {
+  giveupDialog.showModal();
+});
+
+// 降参しない場合
+dialogNoGiveup.addEventListener("click", () => {
+  giveupDialog.close();
+});
+
+// 降参した場合
+dialogGiveup.addEventListener("click", () => {
+  giveupDialog.close();
+  dialogAnswer.innerText = currentQuestionAnswer;
+  answerDialog.showModal();
+})
+
+// 答え表示時の閉じるボタンの処理
+dialogAnswerCloseButton.addEventListener("click", () => {
+  answerDialog.close();
+})
+
 
 // 最初に問題を生成する
 async function pushQuestion() {
@@ -40,6 +74,7 @@ async function pushQuestion() {
   const data = await response.json();
   console.log(data.question);
   currentQuestionIndex = data.questionIndex;
+  currentQuestionAnswer = data.answer;
   questionBox.innerText = data.question;
 }
 
@@ -129,6 +164,7 @@ answerButton.addEventListener("click", () => {
 
 // 新しい問題の出題ボタンのクリックイベントを設定
 requestQuestionButton.addEventListener("click", () => {
+  conversationDiv.innerText = ""
   pushQuestion();
 });
 
