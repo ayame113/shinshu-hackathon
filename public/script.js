@@ -30,6 +30,12 @@ outputDialog.addEventListener("click", (e) => {
   }
 });
 
+//問題生成ボタンを押した際の処理
+requestQuestionButton.addEventListener("click", () => {
+    conversationDiv.innerText = "";
+    pushQuestion();
+});
+
 // 最初に問題を生成する
 async function pushQuestion() {
   const response = await fetch("/pushQuestion");

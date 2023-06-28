@@ -30,6 +30,11 @@ body {
   background-color: aliceblue;
 }
 
+#current-question {
+  height: 20%
+}
+
+
 /* 質問履歴関連 */
 #history-wrapper {
   display: flex;
@@ -177,20 +182,41 @@ body {
   text-align: center;
   text-decoration: none;
   color: #ffffff;
-  background-color: #007bff;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-left: 10px;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+  margin: 10px;
 }
 
 .button:hover {
-  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.button:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
 .button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+#question-button {
+  background-color: #FF5722 ;
+}
+
+#answer-form-button {
+  background-color: #00BCD4 ;
+}
+
+#giveup-button {
+  background-color: #4CAF50 ;
+}
+
+#request-new-question {
+  background-color: green;
 }
 
 /* テキストエリアスタイル */
@@ -202,20 +228,6 @@ body {
   border: 1px solid #cccccc;
   border-radius: 5px;
   resize: none;
-}
-
-#question-button {
-  background-color: #4285f4;
-  color: #ffffff;
-}
-
-#answer-form-button {
-  background-color: #fbbc05;
-  color: #ffffff;
-}
-
-#request-new-question {
-  background-color: green;
 }
 
 dialog {
