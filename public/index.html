@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=M+PLUS+1p&display=swap"
       rel="stylesheet"
     />
-    <script src="script.js" type="module"></script>
+    <script src="script.js" type="module" async></script>
   </head>
   <body>
     <div id="answer-form">
@@ -46,6 +46,18 @@
       <div id="output-dialog-content"></div>
       <img src="./free_.png" alt="" />
       <button id="output-dialog-close">閉じる</button>
+    </dialog>
+
+    <dialog id="giveup-dialog"> 
+      <div id="giveup-dialog-content">本当に降参しますか？</div>
+      <button id="yes-giveup-button">Yes</button>
+      <button id="no-giveup-button">No</button>
+    </dialog>
+
+    <dialog id="answer-dialog">
+      <div id="answer">答え</div>
+      <div id="answer-output"></div>
+      <button id="answer-dialog-close">閉じる</button>
     </dialog>
   </body>
 </html>

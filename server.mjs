@@ -41,6 +41,7 @@ app.get("/pushQuestion", async (req, res) => {
     res.json({
       question: questionData[randomNumber].question,
       questionIndex: randomNumber,
+      answer: questionData[randomNumber].answer
     });
   } catch (error) {
     res.status(500).send({ success: false, message: ERROR_MESSAGE });
