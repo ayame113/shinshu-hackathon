@@ -79,6 +79,7 @@ body {
   margin-top: 1em;
   padding: 0.5em;
   width: fit-content;
+  box-shadow: 3px 4px 6px -3px #333333;
 }
 .history-question {
   background-color: rgb(160, 255, 160);
