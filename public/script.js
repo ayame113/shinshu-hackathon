@@ -34,7 +34,7 @@ dialogCloseButton.addEventListener("click", () => {
   outputDialog.close();
 });
 
-// ダイアログの外側を押したら
+// ダイアログの外側を押したらダイアログを閉じる
 outputDialog.addEventListener("click", (e) => {
   if (e.target !== dialogCloseButton) {
     outputDialog.close();
@@ -56,16 +56,18 @@ dialogGiveup.addEventListener("click", () => {
   giveupDialog.close();
   dialogAnswer.innerText = currentQuestionAnswer;
   answerDialog.showModal();
-})
+});
 
 // 答え表示時の閉じるボタンの処理
 dialogAnswerCloseButton.addEventListener("click", () => {
   answerDialog.close();
-})
-
+});
 
 // 最初に問題を生成する
 async function pushQuestion() {
+  // 最初に「入力してください」メッセージを出す
+  appendMessage("こんにちは！質問を入力してください！", "history-response");
+
   const response = await fetch("/pushQuestion");
   if (!response.ok) {
     questionBox.innerText = "質問の取得に失敗しました。";
@@ -150,6 +152,7 @@ function appendMessage(text, className) {
   messageDiv.classList.add(className);
   messageDiv.textContent = text;
   conversationDiv.appendChild(messageDiv);
+  messageDiv.scrollIntoView();
   return messageDiv;
 }
 
@@ -164,7 +167,7 @@ answerButton.addEventListener("click", () => {
 
 // 新しい問題の出題ボタンのクリックイベントを設定
 requestQuestionButton.addEventListener("click", () => {
-  conversationDiv.innerText = ""
+  conversationDiv.innerText = "";
   pushQuestion();
 });
 
