@@ -20,6 +20,7 @@ body {
   background-size: cover;
   background-color: rgba(255, 255, 255, 0.6);
   background-blend-mode: lighten;
+  background-position: center center;
 }
 
 /* 出題フォーム関連 */
