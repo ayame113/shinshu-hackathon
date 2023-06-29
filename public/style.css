@@ -223,13 +223,16 @@ body {
 
 /* テキストエリアスタイル */
 .form-textarea {
-  width: 100%;
+  display: block;
+  width: 90%;
   height: 100px;
   padding: 10px;
+  margin: 1rem auto;
   font-size: 16px;
   border: 1px solid #cccccc;
   border-radius: 5px;
   resize: none;
+  box-shadow: 3px 4px 6px -5px black;
 }
 
 dialog {
