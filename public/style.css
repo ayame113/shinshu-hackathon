@@ -288,13 +288,61 @@ body {
 
 dialog {
   width: 80%;
-}
-dialog button {
-  margin-right: auto;
-  margin-left: auto;
+  border: none;
+  border-radius: 1rem;
 }
 /* dialogの背景 */
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+}
+
+#output-dialog {
+  text-align: center;
+  background-color: #ffd3e2;
+}
+#output-dialog.incorrect {
+  background-color: #d3e1ff;
+}
+#output-dialog img {
+  width: 50%;
+  margin: auto;
+  display: block;
+}
+#output-dialog button {
+  background-color: #4CAF50;
+  color: white;
+}
+#output-dialog-content {
+  font-size: 2rem;
+}
+
+/* ギブアップ用のダイアログ */
+#giveup-dialog {
+  text-align: center;
+}
+#giveup-dialog-content {
+  font-size: 2rem;
+}
+#yes-giveup-button {
+  background-color: #f32864;
+  color: white;
+}
+#no-giveup-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* 答え表示用ダイアログ */
+#answer-dialog {
+  text-align: center;
+}
+#answer-output {
+  font-size: 1.5rem;
+}
+#answer-dialog-close {
+  background-color: #4CAF50;
+  color: white;
 }
