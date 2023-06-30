@@ -346,3 +346,8 @@ dialog::backdrop {
   background-color: #4CAF50;
   color: white;
 }
+
+.source {
+  color: gray;
+  font-size: 0.5rem;
+}

@@ -82,9 +82,16 @@ async function pushQuestion() {
 
 // 質問する
 async function ask() {
+  // 10秒経過したらfetchを中断する
+  const abortController = new AbortController();
+  setTimeout(() => {
+    abortController.abort();
+  }, 10 * 1000);
+
   const prompt = form.value;
   // 何も入力されていない場合は何もしない
   if (!prompt) {
+    alert("質問を入力してください。");
     return;
   }
   // カウントダウンが終了するまでボタン押すの禁止
@@ -94,28 +101,45 @@ async function ask() {
   // レスポンス待機中の「...」コメントを生成
   const waiting = appendMessage("......", "history-waiting");
   form.value = "";
-  const response = await fetch("/umigame", {
-    method: "POST",
-    body: JSON.stringify({ prompt, questionIndex: currentQuestionIndex }),
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    console.error(await response.text());
+  try {
+    const response = await fetch("/umigame", {
+      method: "POST",
+      body: JSON.stringify({ prompt, questionIndex: currentQuestionIndex }),
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    });
+    if (!response.ok) {
+      console.error(await response.text());
+      waiting.remove();
+      appendMessage(RETRY_MESSAGE, "history-response");
+      return;
+    }
+    const data = await response.json();
+    console.log(data);
     waiting.remove();
-    appendMessage(RETRY_MESSAGE, "history-response");
-    return;
+    appendMessage(data.answer, "history-response");
+  } catch (error) {
+    waiting.remove();
+    appendMessage(
+      "通信エラーが発生しました。少し待ってからお試しください。",
+      "history-response",
+    );
+    console.error(error);
   }
-  const data = await response.json();
-  console.log(data);
-  waiting.remove();
-  appendMessage(data.answer, "history-response");
 }
 
 // 回答を送信して正しいかを判定する
 async function answer() {
+  // 10秒経過したらfetchを中断する
+  const abortController = new AbortController();
+  setTimeout(() => {
+    abortController.abort();
+  }, 10 * 1000);
+
   const answerStr = form.value;
   // 何も入力されていない場合は何もしない
   if (!answerStr) {
+    alert("回答を入力してください。");
     return;
   }
   // カウントダウンが終了するまでボタン押すの禁止
@@ -125,25 +149,35 @@ async function answer() {
   // レスポンス待機中の「...」コメントを生成
   const waiting = appendMessage("......", "history-waiting");
   form.value = "";
-  const response = await fetch("/answer", {
-    method: "POST",
-    body: JSON.stringify({
-      answerStr,
-      questionIndex: currentQuestionIndex,
-    }),
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    console.error(await response.text());
+  try {
+    const response = await fetch("/answer", {
+      method: "POST",
+      body: JSON.stringify({
+        answerStr,
+        questionIndex: currentQuestionIndex,
+      }),
+      headers: { "Content-Type": "application/json" },
+      signal: abortController.signal,
+    });
+    if (!response.ok) {
+      console.error(await response.text());
+      waiting.remove();
+      appendMessage(RETRY_MESSAGE, "history-response");
+      return;
+    }
+    const answerData = await response.json();
     waiting.remove();
-    appendMessage(RETRY_MESSAGE, "history-response");
-    return;
+    appendMessage(answerData.answer, "history-response");
+    outputDialog.showModal();
+    dialogContentBox.innerText = answerData.answer;
+  } catch (error) {
+    waiting.remove();
+    appendMessage(
+      "通信エラーが発生しました。少し待ってからお試しください。",
+      "history-response",
+    );
+    console.error(error);
   }
-  const answerData = await response.json();
-  waiting.remove();
-  appendMessage(answerData.answer, "history-response");
-  outputDialog.showModal();
-  dialogContentBox.innerText = answerData.answer;
 }
 
 // メッセージを追加する
