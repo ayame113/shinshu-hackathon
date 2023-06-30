@@ -213,7 +213,7 @@ let countdown = 0;
 function startCountdown() {
   isAnsweringAllowed = false;
   disableButtons();
-  countdown = 21;
+  countdown = 6;
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 }
