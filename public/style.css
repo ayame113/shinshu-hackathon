@@ -290,6 +290,7 @@ dialog {
   width: 80%;
   border: none;
   border-radius: 1rem;
+  max-height: 90vh;
 }
 /* dialogの背景 */
 dialog::backdrop {
